@@ -8,10 +8,13 @@ tickers = ('BTC-USD', 'ETH-USD', 'USDT-USD', 'USDC-USD', 'DOGE-USD', 'SOL-USD', 
 
 # About section
 expander_bar = st.expander("About")
-expander_bar.markdown("""
-* **Python libraries:** 
-* **Data source:** YahooFinance
-""")
+expander_bar.markdown("""Use this tracker to compare different cryptocurrencies (tickers) based on their price and cumulative 
+returns! Their price is determined by how much interest there is on the market in buying them (demand) 
+and how much is available to buy (supply). A cumulative return on an investment is the aggregate amount that the 
+investment has gained or lost over time, independent of the amount of time involved. From the sidebar on the left, 
+you can choose which cryptocurrencies to compare and a timeframe to analyze. 
+* **Python libraries:** pandas, streamlit
+* **Data source:** YahooFinance""" )
 
 # Columns layout
 col1 = st.sidebar
@@ -32,15 +35,34 @@ def relativeret(df):
 
 
 if len(dropdown) > 0:
+    # summary
+    st.header('Summary')
+    summary_expander = st.expander("Information")
+    summary_expander.markdown("""Below is all the data for each ticker for today to help you compare different 
+    cryptocurrencies. 
+    """)
+    df_list = list()
+    for ticker in dropdown:
+        data = yf.download(ticker, group_by="Ticker", period='1d')
+        data['Ticker'] = ticker  # add this column because the dataframe doesn't contain a column with the ticker
+        df_list.append(data)
+
+    # combine all dataframes into a single dataframe
+    df = pd.concat(df_list)
+    df = df[['Ticker', 'Open', 'Close', 'High', 'Low', 'Adj Close', 'Volume']]
+    st.dataframe(df)
+    # price
+    price_df = yf.download(dropdown, start, end)['Adj Close']
+    st.header('Price of {}'.format(dropdown))
+    st.line_chart(price_df)
+
     # cumulative return
-    tot_df = relativeret(yf.download(dropdown, start, end)['Adj Close'])
+    cumret_df = relativeret(yf.download(dropdown, start, end)['Adj Close'])
     st.header('Cumulative Returns of {}'.format(dropdown))
-    st.line_chart(tot_df)
-    cumret_df = yf.download(dropdown, start, end)['Adj Close']
-    st.header('Total Returns of {}'.format(dropdown))
     st.line_chart(cumret_df)
-    # df = yf.download(dropdown, start=pd.to_datetime(('today')), end=pd.to_datetime(('today')), interval='1d', group_by='column')
-    # st.dataframe(df)
+
+
+
 else:
     st.markdown("""
     Input your options in the sidebar on the left to get started!""")
