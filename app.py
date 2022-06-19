@@ -2,7 +2,13 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 components.html("""
-<link rel="stylesheet" href="./assets/css/style.css" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CryptoGal</title>
+
     <!-- 
     - favicon
   -->
@@ -11,7 +17,7 @@ components.html("""
     <!-- 
     - custom css link
   -->
-    
+    <link rel="stylesheet" href="./assets/css/style.css" />
 
     <!-- 
     - google font link
@@ -22,7 +28,7 @@ components.html("""
       href="https://fonts.googleapis.com/css2?family=Mulish:wght@600;700;900&family=Quicksand:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
+  </head>
 
   <body>
     <!-- 
@@ -704,4 +710,6 @@ components.html("""
       nomodule
       src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
     ></script>
-  </body>""", height=600)
+  </body>
+</html>
+""", height=600)
